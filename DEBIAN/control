@@ -1,0 +1,17 @@
+Package: dina
+Version: 0.1-1
+Architecture: amd64
+Section: web
+Priority: optional
+Installed-Size: 22545
+Maintainer: Ion@TeLOS <teloslinux@protonmail.com>
+Depends: curl, wget, libayatana-appindicator3-1, libwebkit2gtk-4.0-37, libgtk-3-0, python3-flask, xdotool
+Recommends: yad|libnotify-bin
+Description: Minimal ..dinamic web browser
+ Dina is a minimal browser built with tauri, Pake, yad and bash. It uses the webkit rendering engine.
+ Some features included in Dina are: Start-page and search engine selection, bookmarks and "installing" websites as apps.  
+ Dina has a small download and installed size and reuses components which are probably already present in your system, like libwebkit. 
+ The source and package (https://github.com/iontelos/Dina) are maintained by Ion@TeLOS (teloslinux@protonmail.com). 
+ Pake (https://github.com/tw93/Pake) is a credited external project. 
+ .
+ Enjoy!
