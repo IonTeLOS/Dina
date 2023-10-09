@@ -17,5 +17,7 @@ Dina is not low on memory resources though. Nobody is perfect..
 
 dina.deb is hosted on packagecloud
 add the repository: 
+
 curl -s https://packagecloud.io/install/repositories/ion/telos/script.deb.sh | sudo bash
-update - install dina
+
+sudo apt-get update sudo apt-get install dina
