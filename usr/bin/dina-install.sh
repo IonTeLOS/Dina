@@ -25,7 +25,7 @@ if test -f "$FAVAPP"; then
 else
 echo "downloading get-favicon app from github"
 notify-send -a Dina -i dina-browser "Please wait.." "downloading additional required component" &
-wget https://github.com/IonTeLOS/get-favicon/releases/download/public/get-favicon -O $HOME/.local/bin/get-favicon & 
+wget https://github.com/IonTeLOS/get-favicon/releases/download/public/get-favicon -O $HOME/.local/bin/get-favicon && 
 chmod a+x $HOME/.local/bin/get-favicon
 fi
 
