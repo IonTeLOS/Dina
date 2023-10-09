@@ -9,7 +9,7 @@ Dina supports bookmarks, searching the Internet with several popular (and some u
 
 Take a look at Dina-core repository https://github.com/IonTeLOS/Dina-core (a fork of Pake https://github.com/tw93/Pake) to get an idea about the backend of Dina. The executable of Dina is prebuilt (locally or on Github Actions) and points at localhost, port 8001. You can build your own following Pake instructions. This project is not affiliated with Pake. Icons for webapps are sourced from the Internet with the help of get-favicon (https://github.com/IonTeLOS/get-favicon), which is downloaded at runtime. The .deb package of Dina is built using dpkg-deb. It has been tested and has been found to be working in Debian and Ubuntu, stable, testing and unstable. PLease report any issues you may find.
 
-The basic idea behind Dina is to have a modern minimalistic browser which has a very small download size (less than 6 MB) and small installed size (approx. 23 MB - most essential extra components (dependencies) are typically already present in a modern Linux system). This means that Dina can easily serve the purpose of a second, auxilliary browser.
+The basic idea behind Dina is to have a modern minimalistic browser which has a very small download size (less than 6 MB) and small installed size (approx. 23 MB - most essential extra components - dependencies are typically already present in a modern Linux system). This means that Dina can easily serve the purpose of a second, auxilliary browser.
 
 My plans include experimenting also with luakit as backend for the same end goal. pyQtWebEngine is also in the radar and I may share a not-so-tiny effort I am working on.
 
