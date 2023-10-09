@@ -14,3 +14,8 @@ The basic idea behind Dina is to have a modern minimalistic browser which has a 
 My plans include experimenting also with luakit as backend for the same end goal. pyQtWebEngine is also in the radar and I may share a not-so-tiny effort I am working on.
 
 Dina is not low on memory resources though. Nobody is perfect..
+
+dina.deb is hosted on packagecloud
+add the repository: 
+curl -s https://packagecloud.io/install/repositories/ion/telos/script.deb.sh | sudo bash
+update - install dina
