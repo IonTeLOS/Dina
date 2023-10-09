@@ -7,7 +7,7 @@ The idea is simple: A flask server runs on localhost and serves a local html fil
 
 Dina supports bookmarks, searching the Internet with several popular (and some unpopular!) search engines and webapp installation, ie. creating .desktop files that serve as a menu shortcut for any user-favorite websites. Bear in mind that all these "apps" plus Dina share the same profile and cookies. 
 
-Take a look at Dina-core repository https://github.com/IonTeLOS/Dina-core (a fork of Pake https://github.com/tw93/Pake) to get an idea about the backend of Dina. The executable of Dina is prebuilt (locally or on Github Actions) and points at localhost, port 8001. You can build your own following Pake instructions. This project is not affiliated with Pake.  
+Take a look at Dina-core repository https://github.com/IonTeLOS/Dina-core (a fork of Pake https://github.com/tw93/Pake) to get an idea about the backend of Dina. The executable of Dina is prebuilt (locally or on Github Actions) and points at localhost, port 8001. You can build your own following Pake instructions. This project is not affiliated with Pake. The .deb package is built using dpkg-deb. It has been tested and has been found to be working in Debian and Ubuntu, stable, testing and unstable. PLease report any issues you may find.
 
 The basic idea behind Dina is to have a modern minimalistic browser which has a very small download size (less than 6 MB) and small installed size (approx. 23 MB - most essential extra components (dependencies) are typically already present in a modern Linux system). This means that Dina can easily serve the purpose of a second, auxilliary browser.
 
