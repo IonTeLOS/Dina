@@ -19,7 +19,7 @@ X-DBUS-StartupType=
 X-KDE-SubstituteUID=false
 X-KDE-Username=
 Categories=Network;WebBrowser;
-Actions=nav;search;bookmarks;install;
+Actions=nav;search;settings;bookmarks;install;
 
 [Desktop Action nav]
 Name=Navigate
@@ -30,6 +30,11 @@ Exec=/usr/bin/dina-nav.sh
 Name=Search
 Icon=find
 Exec=/usr/bin/dina-search.sh
+
+[Desktop Action settings]
+Name=Settings
+Icon=settings
+Exec=/usr/bin/dina-settings.sh
 
 [Desktop Action bookmarks]
 Name=Bookmarks
