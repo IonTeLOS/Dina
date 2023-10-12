@@ -20,24 +20,3 @@ X-KDE-SubstituteUID=false
 X-KDE-Username=
 Categories=Network;WebBrowser;
 NoDisplay=true
-Actions=nav;search;bookmarks;install;
-
-[Desktop Action nav]
-Name=Navigate
-Icon=web-browser
-Exec=/usr/bin/dina-nav.sh
-
-[Desktop Action search]
-Name=Search
-Icon=find
-Exec=/usr/bin/dina-search.sh
-
-[Desktop Action bookmarks]
-Name=Bookmarks
-Icon=bookmarks
-Exec=/usr/bin/dina-marks.sh
-
-[Desktop Action install]
-Name=Install website
-Icon=install
-Exec=/usr/bin/dina-install.sh
