@@ -23,3 +23,5 @@ curl -s https://packagecloud.io/install/repositories/ion/telos/script.deb.sh | s
 sudo apt-get update 
 
 sudo apt-get install dina
+
+see the command-line options: dina-browser --help
