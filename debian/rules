@@ -1,0 +1,19 @@
+#!/usr/bin/make -f
+
+clean:
+	@# Do nothing
+
+build:
+	@# Do nothing
+	
+binary:
+	mkdir -p debian/dina
+	mkdir -p debian/dina/usr
+	cp -R dina/usr/* debian/dina/usr/
+	dh_gencontrol
+	dh_installdeb
+	dh_builddeb
+		
+	
+	
+	
