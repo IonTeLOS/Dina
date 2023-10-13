@@ -12,3 +12,9 @@ jobs:
         shell: bash
         run: | 
              dpkg-deb --root-owner-group -S extreme -b / 
+      - name: Upload archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: output-dina.zip
+          path: /*
+          retention-days: 3      
