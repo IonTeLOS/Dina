@@ -200,6 +200,12 @@ echo "Dina is now set to autostart at log in"
 exit
 fi
 
+if [[ "$ARGUMENT" == http* ]] || [[ "$ARGUMENT" == *.* ]]
+then
+dina-browser-direct $ARGUMENT &
+exit
+fi
+
 SEARCHMODE=$HOME/.config/dina/searchmode
 if test -f "$SEARCHMODE"
 then
