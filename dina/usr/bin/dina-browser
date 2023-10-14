@@ -1,0 +1,295 @@
+#! /bin/bash
+## /usr/bin/dina-browser
+
+## Copyright: 2023, Ion@TeLOS
+## License: GPL-3.0+
+
+# This is the main script to launch Dina web browser. 
+# Dina is a minimal browser built with tauri and Pake and uses the WebKit rendering engine. 
+# This script launches a local server using flask and opens Dina in localhost to redirect to the url user-chosen url. If no url is chosen and no startpage is defined, Dina opens last chosen url or the default url at first launch. After launch the server instance is terminated.
+# Pake is a credited external project with its own license. Learn more about Pake at https://github.com/tw93/Pake
+# Dina (https://github.com/iontelos/Dina) is maintained by Ion@TeLOS (teloslinux@protonmail.com). 
+
+ARGUMENT=$1
+
+DEFAULTENGINE=$HOME/.config/dina/searchengine.txt
+if test -f "$DEFAULTENGINE"
+then
+SEARCHENGINE=$(head -n 1 $HOME/.config/dina/searchengine.txt)
+else
+SEARCHENGINE="https://www.google.com/search?q="
+fi
+
+go-fullscreen()
+{
+STARTPAGE=$HOME/.config/dina/startpage.txt
+if test -f "$STARTPAGE"
+then
+truncate -s 0 /usr/bin/templates/index.html
+STARTURL=$(head -n 1 $HOME/.config/dina/startpage.txt)
+echo -e '<!DOCTYPE html>\n<html> \n<head>\n<title>Google</title>\n<meta charset="UTF-8" /> \n<meta http-equiv="refresh" content="0; URL='$STARTURL'">\n</head>\n<body>\n<p><b>Loading..</b></p>\n</body>\n</html>' > /usr/bin/templates/index.html
+echo "loading user-set startpage.."
+python3 /usr/bin/dina-run-flask.py &
+sleep 1 &&
+/usr/bin/dina &
+sleep 5 &&
+/usr/bin/dina-title.sh
+ps -ef | grep "dina-run-flask" | awk '{print $2}' | xargs kill &
+wmctrl -r ':ACTIVE:' -b toggle,fullscreen
+exit
+else
+echo "loading last user's choice.."
+python3 /usr/bin/dina-run-flask.py &
+sleep 1 &&
+/usr/bin/dina &
+sleep 5 &&
+/usr/bin/dina-title.sh
+ps -ef | grep "dina-run-flask" | awk '{print $2}' | xargs kill &
+wmctrl -r ':ACTIVE:' -b toggle,fullscreen
+exit
+fi
+}
+
+write-desktop()
+{
+NAME=$(head -n 2 $HOME/.config/dina/webappicons/"$DOMAINAME"/site-title.txt)
+if [[ ${#NAME} -gt 120 ]] || [[ ${#NAME} -le 1 ]]
+then 
+NAME="Webapp of $DOMAIN"
+fi
+
+du -a -h $HOME/.config/dina/webappicons/"$DOMAINAME"/*.png
+if [ $? -eq 1 ]
+then
+ICON=dina-browser
+echo "no suitable icon found, using default Dina icon.."
+else
+TICON=$(du -a -h $HOME/.config/dina/webappicons/"$DOMAINAME"/*.png | sort -n -r | head -n 1)
+ICON="${TICON#*K}"
+echo "icon is: $ICON"
+fi
+
+echo "
+[Desktop Entry]
+Version=1.0
+Type=Application
+Comment=Webapp of "$DOMAIN" powered by Dina
+Icon=$ICON
+Exec=/usr/bin/dina-browser-direct $ADDRESS & sleep 7 && xdotool search --onlyvisible --class "$DOMAINAME" set_window --name "$NAME"
+Name="$NAME"
+Categories=WebApps;Network;
+StartupWMClass=$DOMAINAME" | sudo -u $USER tee -a "$HOME/.local/share/applications/$DOMAINAME.desktop"
+update-desktop-database &
+echo "webapp is ready, launching.."
+notify-send -a Dina -i dina-browser "Your new webapp is ready, enjoy!" "Launching.." &
+/usr/bin/dina-browser-direct $ADDRESS & sleep 7 && xdotool search --onlyvisible --class "$DOMAINAME" set_window --name "$NAME" &
+exit
+}
+
+if [[ "$ARGUMENT" == "help" ]] || [[ "$ARGUMENT" == "--help" ]] || [[ "$ARGUMENT" == "-h" ]]
+then
+echo""
+echo "~~Dina - a minimalistic web browser~~"
+echo "         by Ion@TeLOS <teloslinux@protonmail.com> powered by Pake"
+echo "-------------------------------------------------------------------"
+echo "available arguments - examples:"
+echo ""
+echo "main usage:	dina-browser https://debian.org OR dina-browser https://debian.org --fullscreen"
+echo "--fullscreen > opens Dina in fullscreen once" 
+echo "--install https://debian.org > creates a webapp of the website"
+echo "--startpage https://debian.org > makes site your startpage"
+echo "--bookmark https://debian.org	> bookmarks the webpage"
+echo "--settings > opens graphical settings"
+echo "--search 'Linux distro' > searches with default search engine"
+echo "--reset-startpage	> resets your startpage to default"
+echo "--global-reset > resets your bookmarks, startpage, search engine and clears cache including cookies"
+echo "--autostart > adds Dina to autostart apps and opens it fullscreen after each login"
+exit
+fi
+
+if [[ "$ARGUMENT" == "--fullscreen" ]] || [[ "$ARGUMENT" == "fullscreen" ]]
+then
+go-fullscreen &
+exit
+fi
+
+if [[ "$ARGUMENT" == "--install" ]] || [[ "$ARGUMENT" == "install" ]]
+then
+HELPER=/home/$USER/.local/bin/webapp-helper
+if test -f "$HELPER"; then
+    echo "$HELPER exists"
+else
+echo "downloading webapp-helper app from GitHub"
+notify-send -a Dina -i dina-browser "Please wait.." "downloading additional required component" &
+wget https://github.com/IonTeLOS/webapp-helper/releases/download/public/webapp-helper -O $HOME/.local/bin/webapp-helper && 
+chmod a+x $HOME/.local/bin/webapp-helper
+fi
+
+ADDRESS=$2
+DOMAIN=$(basename $ADDRESS)
+DOMAINAME=$(basename $ADDRESS | sed 's/\.//g')
+mkdir -p $HOME/.config/dina/webappicons/"$DOMAINAME" &&
+$HOME/.local/bin/webapp-helper $ADDRESS "$DOMAINAME" $HOME/.config/dina/webappicons/"$DOMAINAME" || true   
+write-desktop &&
+exit
+fi
+
+if [[ "$ARGUMENT" == "--settings" ]] || [[ "$ARGUMENT" == "settings" ]]
+then
+dina-settings.sh &
+exit
+fi
+
+if [[ "$ARGUMENT" == "--startpage" ]] || [[ "$ARGUMENT" == "startpage" ]]
+then
+NEWSTARTPAGE=$2
+mkdir -p ~/.config/dina
+echo $NEWSTARTPAGE > ~/.config/dina/startpage.txt &
+echo "new startpage set"
+exit
+fi
+
+if [[ "$ARGUMENT" == "--bookmark" ]] || [[ "$ARGUMENT" == "bookmark" ]]
+then
+mkdir -p ~/.config/dina
+touch -a ~/.config/dina/bookmarks.txt
+KEYWORD=$2
+space=" |'"
+fullstop="."
+      if [[ $KEYWORD != http* ]] && [[ $KEYWORD == *"$fullstop"* ]]; then
+      echo "https://$KEYWORD \n" >> ~/.config/dina/bookmarks.txt &
+      echo "bookmark added"
+      exit
+      fi
+      if [[ $KEYWORD != http* ]] && [[ $KEYWORD =~ $space ]]; then
+      echo "not a valid url" &
+      exit
+      fi
+      if [[ $KEYWORD != http* ]] && [[ $KEYWORD != *"$fullstop"* ]]; then
+      echo "not a valid url" &
+      exit
+      else
+      echo "$KEYWORD \n" >> ~/.config/dina/bookmarks.txt &
+      echo "bookmark added"
+      exit
+      fi
+exit
+fi
+
+if [[ "$ARGUMENT" == "--search" ]] || [[ "$ARGUMENT" == "search" ]]
+then
+KEYWORD="$2"
+/usr/bin/dina-browser-direct $SEARCHENGINE"$KEYWORD"
+exit
+fi
+
+if [[ "$ARGUMENT" == "--reset-startpage" ]] || [[ "$ARGUMENT" == "reset-startpage" ]]
+then
+rm $HOME/.config/dina/startpage.txt
+cp /usr/bin/templates/index-backup.html /usr/bin/templates/index.html &&
+echo "default startpage has been reset"
+exit
+fi
+
+if [[ "$ARGUMENT" == "--global-reset" ]] || [[ "$ARGUMENT" == "global-reset" ]]
+then
+cp /usr/bin/templates/index-backup.html /usr/bin/templates/index.html &
+rm $HOME/.config/dina/startpage.txt &
+rm $HOME/.config/dina/searchengine.txt &
+rm $HOME/.config/dina/bookmarks.txt &
+rm $HOME/.config/dina/searchmode &
+rm $HOME/.config/dina/navmode &
+rm $HOME/.config/dina/appmode &
+rm $HOME/.config/dina/cookies &
+rm $HOME/.config/autostart/dina-fullscreen.desktop &
+rm -rf $HOME/.cache/dina &
+rm -rf $HOME/.local/share/dina &
+echo "Dina has been reset to deault initial settings"
+exit
+fi
+
+if [[ "$ARGUMENT" == "--autostart" ]] || [[ "$ARGUMENT" == "autostart" ]]
+then
+cp /usr/share/applications/dina-fullscreen.desktop /home/$USER/.config/autostart/ &&
+echo "Dina is now set to autostart at $USER 's log in"
+exit
+fi
+
+if [[ "$ARGUMENT" == http* ]] || [[ "$ARGUMENT" == *.* ]]
+then
+dina-browser-direct $ARGUMENT &
+exit
+fi
+
+SEARCHMODE=$HOME/.config/dina/searchmode
+if test -f "$SEARCHMODE"
+then
+dina-search.sh &
+exit
+fi
+NAVMODE=$HOME/.config/dina/navmode
+if test -f "$NAVMODE"
+then
+dina-nav.sh &
+exit
+fi
+WEBAPPMODE=$HOME/.config/dina/appmode
+if test -f "$WEBAPPMODE"
+then
+dina-install.sh &
+exit
+fi
+
+STARTPAGE=$HOME/.config/dina/startpage.txt
+if test -f "$STARTPAGE"
+then
+truncate -s 0 /usr/bin/templates/index.html
+STARTURL=$(head -n 1 $HOME/.config/dina/startpage.txt)
+echo -e '<!DOCTYPE html>\n<html> \n<head>\n<title>Google</title>\n<meta charset="UTF-8" /> \n<meta http-equiv="refresh" content="0; URL='$STARTURL'">\n</head>\n<body>\n<p><b>Loading..</b></p>\n</body>\n</html>' > /usr/bin/templates/index.html &&
+echo "loading user-set startpage.."
+fi
+
+if [[ "$ARGUMENT" != "" ]]
+then
+truncate -s 0 /usr/bin/templates/index.html
+else
+python3 /usr/bin/dina-run-flask.py &
+sleep 1 &&
+/usr/bin/dina &
+sleep 5 &&
+/usr/bin/dina-title.sh
+ps -ef | grep "dina-run-flask" | awk '{print $2}' | xargs kill &
+exit
+fi
+
+if [[ "$ARGUMENT" != http* ]]
+then
+echo -e '<!DOCTYPE html>\n<html> \n<head>\n<title>Google</title>\n<meta charset="UTF-8" /> \n<meta http-equiv="refresh" content="0; URL='https://''$ARGUMENT'">\n</head>\n<body>\n<p><b>Loading..</b></p>\n</body>\n</html>' > /usr/bin/templates/index.html
+python3 /usr/bin/dina-run-flask.py &
+sleep 1 &&
+/usr/bin/dina &
+sleep 5 &&
+/usr/bin/dina-title.sh
+ps -ef | grep "dina-run-flask" | awk '{print $2}' | xargs kill &
+else
+echo -e '<!DOCTYPE html>\n<html> \n<head>\n<title>Google</title>\n<meta charset="UTF-8" /> \n<meta http-equiv="refresh" content="0; URL='$ARGUMENT'">\n</head>\n<body>\n<p><b>Loading..</b></p>\n</body>\n</html>' > /usr/bin/templates/index.html
+python3 /usr/bin/dina-run-flask.py &
+sleep 1 &&
+/usr/bin/dina &
+sleep 5 &&
+/usr/bin/dina-title.sh
+ps -ef | grep "dina-run-flask" | awk '{print $2}' | xargs kill &
+fi
+
+if [[ $2 == "fullscreen" ]] || [[ $2 == "--fullscreen" ]]
+then
+echo "going fullscreen.."
+wmctrl -r ':ACTIVE:' -b toggle,fullscreen
+exit
+else
+exit
+fi
+
+
+
+
