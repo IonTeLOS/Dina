@@ -17,13 +17,4 @@ Dina supports a Terminal extension - DinaTerm https://github.com/IonTeLOS/dinate
 
 Dina is not low on memory resources though. Nobody is perfect..
 
-dina.deb is hosted on packagecloud
-add the repository: 
-
-curl -s https://packagecloud.io/install/repositories/ion/telos/script.deb.sh | sudo bash
-
-sudo apt-get update 
-
-sudo apt-get install dina
-
 see the command-line options: dina-browser --help
