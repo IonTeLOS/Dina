@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+chmod 777 /usr/bin/templates/index.html
+chmod 777 /usr/bin/templates/index-backup.html
+exit 0
