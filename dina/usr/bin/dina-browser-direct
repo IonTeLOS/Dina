@@ -1,0 +1,69 @@
+#! /bin/bash
+## /usr/bin/dina-browser-direct
+
+## Copyright: 2023, Ion@TeLOS
+## License: GPL-3.0+
+
+# This is a secondary script to start Dina web browser. Dina is a minimal browser built with tauri and Pake and uses the WebKit rendering engine. 
+# This script launches a local server using flask and opens Dina in localhost to redirect to the url user-chosen url. If no url is chosen and no startpage is defined, Dina opens last chosen url or the default url at first launch. After launch the server instance is terminated.
+# Pake is a credited external project with its own license. Learn more about Pake at https://github.com/tw93/Pake
+# Dina (https://github.com/iontelos/Dina) is maintained by Ion@TeLOS (teloslinux@protonmail.com). 
+
+ARGUMENT=$1
+
+DEFAULTENGINE=$HOME/.config/dina/searchengine.txt
+if test -f "$DEFAULTENGINE"
+then
+SEARCHENGINE=$(head -n 1 $HOME/.config/dina/searchengine.txt)
+else
+SEARCHENGINE="https://www.google.com/search?q="
+fi
+
+STARTPAGE=$HOME/.config/dina/startpage.txt
+if test -f "$STARTPAGE"
+then
+truncate -s 0 /usr/bin/templates/index.html
+STARTURL=$(head -n 1 $HOME/.config/dina/startpage.txt)
+echo -e '<!DOCTYPE html>\n<html> \n<head>\n<title>Dina page</title>\n<meta charset="UTF-8" /> \n<meta http-equiv="refresh" content="0; URL='$STARTURL'">\n</head>\n<body>\n<p><b>Loading..</b></p>\n</body>\n</html>' > /usr/bin/templates/index.html
+echo "loading user-set startpage.."
+fi
+
+if [[ "$ARGUMENT" != "" ]]
+then
+truncate -s 0 /usr/bin/templates/index.html
+else
+python3 /usr/bin/dina-run-flask.py &
+sleep 1 &&
+/usr/bin/dina &
+sleep 5 &&
+/usr/bin/dina-title.sh
+ps -ef | grep "dina-run-flask" | awk '{print $2}' | xargs kill
+fi
+
+if [[ "$ARGUMENT" != http* ]]
+then
+echo -e '<!DOCTYPE html>\n<html> \n<head>\n<title>Dina page</title>\n<meta charset="UTF-8" /> \n<meta http-equiv="refresh" content="0; URL='https://''$ARGUMENT'">\n</head>\n<body>\n<p><b>Loading..</b></p>\n</body>\n</html>' > /usr/bin/templates/index.html
+python3 /usr/bin/dina-run-flask.py &
+sleep 1 &&
+/usr/bin/dina &
+sleep 5 &&
+/usr/bin/dina-title.sh
+ps -ef | grep "dina-run-flask" | awk '{print $2}' | xargs kill
+else
+echo -e '<!DOCTYPE html>\n<html> \n<head>\n<title>Dina page</title>\n<meta charset="UTF-8" /> \n<meta http-equiv="refresh" content="0; URL='$ARGUMENT'">\n</head>\n<body>\n<p><b>Loading..</b></p>\n</body>\n</html>' > /usr/bin/templates/index.html
+python3 /usr/bin/dina-run-flask.py &
+sleep 1 &&
+/usr/bin/dina &
+sleep 5 &&
+/usr/bin/dina-title.sh
+ps -ef | grep "dina-run-flask" | awk '{print $2}' | xargs kill
+fi
+
+if [[ $2 == "fullscreen" ]] || [[ $2 == "--fullscreen" ]]
+then
+echo "going fullscreen.."
+wmctrl -r ':ACTIVE:' -b toggle,fullscreen &
+exit
+else
+exit
+fi
