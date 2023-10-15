@@ -13,6 +13,8 @@ The basic idea behind Dina is to have a modern, minimalistic browser, which has 
 
 My near future plans include experimenting with luakit as backend for the same end goal. pyQt5WebEngine is also in the radar and I may share a not-so-tiny project I am working on.
 
+Dina supports a Terminal extension - DinaTerm https://github.com/IonTeLOS/dinaterm, which enables you to run a fully functional terminal emulator in your browser. More extensions may follow. 
+
 Dina is not low on memory resources though. Nobody is perfect..
 
 dina.deb is hosted on packagecloud
