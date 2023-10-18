@@ -202,8 +202,14 @@ case $EXTENSIONS in
    
 if [[ $SEL == "Terminal" ]]
 then
+TERM=/usr/bin/dinaterm
+if test -f "$TERM"; then
+    echo "DinaTerm is already installed, exiting.."
+    notify-send -a Dina -i dina-browser "DinaTerm is already installed, exiting.." &
+    exit
+fi
 notify-send -a Dina -i dina-browser "Enter your password when prompted" "to complete installation of selected extension"
-wget https://github.com/IonTeLOS/dinaterm/releases/download/local/dinaterm_0.1-1_amd64.deb -O /tmp/dinaterm.deb &&
+wget -p https://github.com/IonTeLOS/dinaterm/releases/download/local/dinaterm_0.1-1_amd64.deb /tmp/dinaterm.deb &&
 pkexec apt-get install /tmp/dinaterm.deb -y &&
 notify-send -a Dina -i dina-browser "DinaTerm Extension has been added"
 dinaterm &
