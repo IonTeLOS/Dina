@@ -19,7 +19,7 @@ X-DBUS-StartupType=
 X-KDE-SubstituteUID=false
 X-KDE-Username=
 Categories=Network;WebBrowser;
-Actions=nav;search;settings;bookmarks;install;dinaterm;
+Actions=nav;search;settings;bookmarks;install;dinaterm;dinafiles;
 
 [Desktop Action nav]
 Name=Navigate
@@ -50,3 +50,9 @@ Exec=/usr/bin/dina-install.sh
 Name=DinaTerm Terminal
 Icon=terminal
 Exec=/usr/bin/dina-settings.sh --dinaterm
+
+[Desktop Action dinafiles]
+Name=DinaFiles File Manager
+Icon=folder
+Exec=/usr/bin/dina-settings.sh --dinafiles
+
