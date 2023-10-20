@@ -11,6 +11,8 @@
 
 ARGUMENT=$1
 
+export WEBKIT_DISABLE_COMPOSITING_MODE=1
+
 DEFAULTENGINE=$HOME/.config/dina/searchengine.txt
 if test -f "$DEFAULTENGINE"
 then
