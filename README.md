@@ -18,3 +18,15 @@ Dina supports a Terminal extension - DinaTerm https://github.com/IonTeLOS/dinate
 Dina is not low on memory resources though. Nobody is perfect..
 
 see the command-line options: dina-browser --help
+
+To add the repository and install Dina :
+
+wget -qO - https://iontelos.github.io/appy/KEY.gpg | sudo gpg --dearmor -o /usr/share/keyrings/appy.gpg
+
+sudo curl -s --compressed -o /etc/apt/sources.list.d/telos.list "https://iontelos.github.io/appy/telos.list"
+
+sudo apt clean
+
+sudo apt update
+
+sudo apt install dina
