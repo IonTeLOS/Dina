@@ -7,19 +7,25 @@ The idea is simple: A flask server runs on localhost and serves a local html fil
 
 Dina supports bookmarks, searching the Internet with several popular (and some unpopular!) search engines, fullscreen autostart ("kiosk mode") and webapp creation, that means creating .desktop files that serve as menu shortcuts for websites. Bear in mind that all these "apps" plus Dina itself share the same profile and cookies. Naturally, this profile is separate from the profile in your other browsers. Dina supports clearing the cache and re-initializing the application. 
 
-Take a look at Dina-core repository https://github.com/IonTeLOS/Dina-core, a fork of Pake, to get an idea about the backend of Dina. The executable of Dina is prebuilt (locally or on GitHub Actions) and points at localhost, port 8001. You can build your own Dina-core following Pake instructions. This project is not affiliated with Pake. Icons for webapps are sourced from the Internet with the help of get-favicon app (https://github.com/IonTeLOS/get-favicon), which is downloaded at runtime. The .deb package of Dina itself is built using dpkg-deb. Dina Browser has been tested and has been found to be working in Debian and Ubuntu, including stable, testing and unstable branches. It should work on other Debian-based distributions too. Please report any issues you may face. Suggestions are welcome. 
+Take a look at Dina-core repository https://github.com/IonTeLOS/Dina-core, a fork of Pake, to get an idea about the backend of Dina. The executable of Dina is prebuilt (locally or on GitHub Actions) and points at localhost, port 8001. You can build your own Dina-core following Pake instructions. This project is not affiliated with Pake. Icons for webapps are sourced from the Internet with the help of get-favicon app (https://github.com/IonTeLOS/get-favicon), which is downloaded at runtime. The .deb package of Dina itself is built using dpkg-buildpackage. Dina Browser has been tested and has been found to be working in Debian and Ubuntu, including stable, testing and unstable branches. It should work on other Debian-based distributions too. Please report any issues you may face. Suggestions are welcome. 
 
-The basic idea behind Dina is to have a modern, minimalistic browser, which has a very small download size (less than 5 MB) and small installed size (approx. 23 MB ) and few dependencies. Most essential components - dependencies are typically already present in a modern Linux system and are frequently updated anyway. This means that Dina can easily serve the purpose of a second, auxilliary browser, a webapp creation tool or a browser for a kiosk setup.
+The goal of Dina is to offer a modern, minimalistic browser, which has a very small download size (less than 5 MB), small installed size (approx. 23 MB ) and few dependencies. Most essential components - dependencies are typically already present in a modern Linux system (particularly on gtk based desktop environments) and are frequently updated anyway. This means that Dina can easily serve the purpose of a second, auxilliary browser, a webapp creation tool or a browser for a kiosk setup.
 
 My near future plans include experimenting with luakit as backend for the same end goal. pyQt5WebEngine is also in the radar and I may share a not-so-tiny project I am working on.
 
-Dina supports a Terminal extension - DinaTerm https://github.com/IonTeLOS/dinaterm, which enables you to run a fully functional terminal emulator in the browser. More extensions may follow. 
+Dina now supports two extensions: 
+- DinaTerm, the terminal emulator https://github.com/IonTeLOS/dinaterm, which enables you to run a fully functional terminal in the browser powered by pyxterm.js
+- DinaFiles, the file manager https://github.com/IonTeLOS/dinafiles is a complete file manager inside Dina powered by filebrowser
+
+both extensions can optionally run on your "other" browser too
+
+More extensions may follow. 
 
 Dina is not low on memory resources though. Nobody is perfect..
 
 see the command-line options: dina-browser --help
 
-To add the repository and install Dina :
+To add the repository to install Dina and keep it updated :
 
 wget -qO - https://iontelos.github.io/appy/KEY.gpg | sudo gpg --dearmor -o /usr/share/keyrings/appy.gpg
 
